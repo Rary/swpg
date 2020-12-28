@@ -38,6 +38,7 @@ public class GameRenderer {
         this.spriteManager = spriteManager;
         this.preferredWidth = preferredWidth;
         this.preferredHeight = preferredHeight;
+        spriteManager.load();   // TODO: this doesn't belong here
     }
 
     public void placeSprite(String name, int x, int y, int phase) {

@@ -23,8 +23,6 @@
  */
 package event;
 
-import state.State;
-
-public interface EventListener {
-    void eventCompleted(Event event, State state);
+public interface EventListener<T> {
+    void eventCompleted(T event);
 }

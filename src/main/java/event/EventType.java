@@ -21,33 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui;
+package event;
 
-import event.EventListener;
-import event.StateEvent;
-import ui.graphics.SpriteManager;
-import ui.util.FrameHelper;
-
-import javax.swing.*;
-import java.awt.*;
-
-public class GameWindow extends JFrame {
-    private final GamePanel gamePanel;
-
-    public GameWindow(String title) {
-        super(title);
-        this.gamePanel = new GamePanel(new GameRenderer(new SpriteManager(), 980.0, 508.0));
-        this.add(gamePanel, BorderLayout.CENTER);
-    }
-
-    public EventListener<StateEvent> eventListener() {
-        return gamePanel;
-    }
-
-    public void launch() {
-        FrameHelper.show(this);
-        FrameHelper.enableExitOnClose(this);
-        FrameHelper.center(this);
-        FrameHelper.maximize(this);
-    }
+public enum EventType {
+    INPUT_RECEIVED,
+    DISPLAY_REFRESHED
 }

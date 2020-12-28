@@ -21,33 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui;
+package game;
 
-import event.EventListener;
-import event.StateEvent;
-import ui.graphics.SpriteManager;
-import ui.util.FrameHelper;
+public interface InputListener {
+    void rightPressed();
 
-import javax.swing.*;
-import java.awt.*;
+    void rightReleased();
 
-public class GameWindow extends JFrame {
-    private final GamePanel gamePanel;
+    void leftPressed();
 
-    public GameWindow(String title) {
-        super(title);
-        this.gamePanel = new GamePanel(new GameRenderer(new SpriteManager(), 980.0, 508.0));
-        this.add(gamePanel, BorderLayout.CENTER);
-    }
-
-    public EventListener<StateEvent> eventListener() {
-        return gamePanel;
-    }
-
-    public void launch() {
-        FrameHelper.show(this);
-        FrameHelper.enableExitOnClose(this);
-        FrameHelper.center(this);
-        FrameHelper.maximize(this);
-    }
+    void leftReleased();
 }

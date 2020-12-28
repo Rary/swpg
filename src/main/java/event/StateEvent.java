@@ -21,26 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package state;
+package event;
 
-import event.Event;
-import event.EventManager;
+import model.State;
 
-public class StateManager {
-    private final EventManager eventManager;
-    private final State state;
-
-    public StateManager(EventManager eventManager, State state) {
-        this.eventManager = eventManager;
-        this.state = state;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void startGame() {
-        state.setHasStarted(true);
-        eventManager.publish(Event.GAME_STARTED, state);
+public class StateEvent extends Event<State> {
+    public StateEvent(State payload) {
+        super(payload);
     }
 }

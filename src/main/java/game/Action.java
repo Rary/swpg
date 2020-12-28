@@ -21,20 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package state;
+package game;
 
-public class State {
-    private boolean hasStarted;
+public interface Action {
+    String COUNTER = "counter";
+    String RIGHT_HELD = "rightHeld";
+    String LEFT_HELD = "leftHeld";
+    String MOVE_PLAYER = "movePlayer";
 
-    public State() {
-        this.hasStarted = false;
-    }
-
-    public boolean getHasStarted() {
-        return hasStarted;
-    }
-
-    public void setHasStarted(boolean hasStarted) {
-        this.hasStarted = hasStarted;
-    }
+    void act();
 }

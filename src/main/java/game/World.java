@@ -23,34 +23,114 @@
  */
 package game;
 
-import model.Movable;
+import config.GameConfig;
+import event.EventListener;
+import event.EventManager;
+import event.InputEvent;
+import event.StateEvent;
 import model.Player;
-import ui.DisplayListener;
+import model.Direction;
+import model.Input;
+import model.State;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class World {
-    private final DisplayListener displayListener;
+public class World implements EventListener<InputEvent> {
+    private final EventManager eventManager;
+    private final GameConfig gameConfig;
+    private final State state;
     private final Clock clock;
-    private final Player player;
-    private final Set<Movable> movables;
 
-    public World(DisplayListener displayListener, Clock clock, Player player) {
-        this.displayListener = displayListener;
+    public World(EventManager eventManager, GameConfig gameConfig, State state, Clock clock) {
+        this.eventManager = eventManager;
+        this.gameConfig = gameConfig;
+        this.state = state;
         this.clock = clock;
-        this.player = player;
-        this.movables = new HashSet<>();
-        movables.add(player);
     }
 
     public void start() {
-        clock.scheduleEvent("tick", () -> displayListener.redraw(movables), 15);
+        clock.scheduleAction(Action.COUNTER, () -> {
+            state.incrementCounter();
+            eventManager.publish(new StateEvent(state));
+        }, 25);
     }
 
-    public void movePlayer(int heading, int velocity) {
+    @Override
+    public void eventCompleted(InputEvent event) {
+        Input input = event.payload();
+        input.directionPressed().ifPresent(direction -> {
+            switch (direction) {
+                case E:
+                    rightPressed();
+                    break;
+                case W:
+                    leftPressed();
+                    break;
+            }
+        });
+        input.directionReleased().ifPresent(direction -> {
+            switch (direction) {
+                case E:
+                    rightReleased();
+                    break;
+                case W:
+                    leftReleased();
+                    break;
+            }
+        });
+    }
+
+    private void rightPressed() {
+        state.inputDirection(Direction.E);
+        state.player().setVelocity(20);
+        eventManager.publish(new StateEvent(state));
+        clock.scheduleAction(Action.RIGHT_HELD, () -> {
+            if (state.player().getVelocity() < 200) {
+                state.player().changeVelocity(20);
+                applyInputDirection();
+            }
+        }, 20);
+        applyInputDirection();
+    }
+
+    private void rightReleased() {
+        state.inputDirection(Direction.NONE);
+        state.player().setVelocity(0);
+        clock.stopAction(Action.RIGHT_HELD);
+        applyInputDirection();
+    }
+
+    private void leftPressed() {
+        state.inputDirection(Direction.W);
+        state.player().setVelocity(20);
+        eventManager.publish(new StateEvent(state));
+        clock.scheduleAction(Action.LEFT_HELD, () -> {
+            if (state.player().getVelocity() < 200) {
+                state.player().changeVelocity(20);
+                applyInputDirection();
+            }
+        }, 20);
+        applyInputDirection();
+    }
+
+    private void leftReleased() {
+        state.inputDirection(Direction.NONE);
+        state.player().setVelocity(0);
+        clock.stopAction(Action.LEFT_HELD);
+        applyInputDirection();
+    }
+
+    private void applyInputDirection() {
+        Player player = state.player();
+        if (player.getVelocity() == 0) {
+            clock.stopAction(Action.MOVE_PLAYER);
+            return;
+        }
+        int heading = state.inputDirection().heading();
         player.setHeading(heading);
-        player.setVelocity(velocity);
-        clock.scheduleEvent("movePlayer", () -> player.setX(player.getX() + 1), 100 - player.getVelocity());
+        clock.scheduleAction(Action.MOVE_PLAYER, () -> {
+            int deltaX = state.player().getHeading() > Direction.N.heading() && state.player().getHeading() < Direction.S.heading() ? 1 : state.player().getHeading() < 360 + Direction.N.heading() || state.player().getHeading() > Direction.S.heading() ? -1 : 0;
+            int deltaY = state.player().getHeading() > Direction.E.heading() && state.player().getHeading() < Direction.W.heading() ? 1 : state.player().getHeading() < Direction.E.heading() || state.player().getHeading() > Direction.W.heading() ? -1 : 0;
+            state.player().changeX(deltaX);
+            state.player().changeY(deltaY);
+        }, 1000 / state.player().getVelocity());
     }
 }

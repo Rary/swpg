@@ -25,20 +25,25 @@ package load;
 
 import config.GameConfig;
 import config.i18n.Messages;
+import event.EventManager;
 import game.Clock;
 import model.Player;
 import game.World;
-import ui.DisplayListener;
+import model.State;
 import ui.GameWindow;
+import ui.Keyboard;
 
 public class Loader {
     public void run(ArgumentParser args) {
         Messages messages = new Messages(args.stringArgument("messages", "m").orElse("i18n/messages"));
+        EventManager eventManager = new EventManager();
         GameConfig gameConfig = new GameConfig(messages);
+        World world = new World(eventManager, gameConfig, new State(new Player(100, 100)), new Clock());
         GameWindow window = new GameWindow(gameConfig.windowTitle());
-        DisplayListener displayListener = window.displayListener();
-        World world = new World(displayListener, new Clock(), new Player(0, 0));
-        world.start();
+        window.addKeyListener(new Keyboard(eventManager));
+        eventManager.subscribeToInput(world);
+        eventManager.subscribeToState(window.eventListener());
         window.launch();
+        world.start();
     }
 }

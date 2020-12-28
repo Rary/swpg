@@ -23,6 +23,7 @@
  */
 package ui.graphics;
 
+import java.io.IOException;
 import java.util.*;
 
 public class SpriteManager {
@@ -30,6 +31,16 @@ public class SpriteManager {
 
     public SpriteManager() {
         this.sprites = new HashMap<>();
+    }
+
+    public void load() {
+        try {
+            Sprite sprite = new Sprite("player", Collections.singletonList(this.getClass().getClassLoader().getResourceAsStream("sprites/player-r1.png")));
+            sprites.put(sprite.getName(), sprite);
+        }
+        catch (IOException e) {
+            throw new RuntimeException();
+        }
     }
 
     public Collection<Sprite> activeSprites() {

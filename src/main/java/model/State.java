@@ -21,33 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui;
+package model;
 
-import event.EventListener;
-import event.StateEvent;
-import ui.graphics.SpriteManager;
-import ui.util.FrameHelper;
+public class State {
+    private long counter;
+    private Direction inputDirection;
+    private Player player;
 
-import javax.swing.*;
-import java.awt.*;
-
-public class GameWindow extends JFrame {
-    private final GamePanel gamePanel;
-
-    public GameWindow(String title) {
-        super(title);
-        this.gamePanel = new GamePanel(new GameRenderer(new SpriteManager(), 980.0, 508.0));
-        this.add(gamePanel, BorderLayout.CENTER);
+    public State(Player player) {
+        this.counter = 0;
+        this.player = player;
     }
 
-    public EventListener<StateEvent> eventListener() {
-        return gamePanel;
+    public long counter() {
+        return counter;
     }
 
-    public void launch() {
-        FrameHelper.show(this);
-        FrameHelper.enableExitOnClose(this);
-        FrameHelper.center(this);
-        FrameHelper.maximize(this);
+    public void incrementCounter() {
+        counter ++;
+    }
+
+    public Direction inputDirection() {
+        return inputDirection;
+    }
+
+    public void inputDirection(Direction inputDirection) {
+        this.inputDirection = inputDirection;
+    }
+
+    public Player player() {
+        return player;
+    }
+
+    public void player(Player player) {
+        this.player = player;
     }
 }

@@ -23,13 +23,14 @@
  */
 package ui;
 
-import model.Movable;
+import event.EventListener;
+import event.StateEvent;
+import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 
-public class GamePanel extends JPanel implements DisplayListener {
+public class GamePanel extends JPanel implements EventListener<StateEvent> {
     private final GameRenderer gameRenderer;
 
     public GamePanel(GameRenderer gameRenderer) {
@@ -45,8 +46,9 @@ public class GamePanel extends JPanel implements DisplayListener {
     }
 
     @Override
-    public void redraw(Set<Movable> movables) {
-        movables.forEach(movable -> gameRenderer.placeSprite(movable.getName(), movable.getX(), movable.getY(), movable.getPhase()));
+    public void eventCompleted(StateEvent event) {
+        Player player = event.payload().player();
+        gameRenderer.placeSprite(player.getName(), player.getX(), player.getY(), player.getPhase());
         this.getParent().repaint();
     }
 }

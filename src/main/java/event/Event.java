@@ -23,6 +23,14 @@
  */
 package event;
 
-public enum Event {
-    GAME_STARTED
+public abstract class Event<T> {
+    private final T payload;
+
+    public Event(T payload) {
+        this.payload = payload;
+    }
+
+    public T payload() {
+        return payload;
+    }
 }

@@ -35,24 +35,23 @@ public class Clock {
         this.timers = new HashMap<>();
     }
 
-    public void scheduleEvent(String name, Event event, int delay) {
+    public void scheduleAction(String name, Action action, int delay) {
         if (timers.containsKey(name)) {
-            timers.get(name).cancel();
+            timers.remove(name).cancel();
         }
-        else {
-            timers.put(name, new Timer());
-        }
-        timers.get(name).schedule(new TimerTask() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                event.act();
+                action.act();
             }
         }, delay, delay);
+        timers.put(name, timer);
     }
 
-    public void stopEvent(String name) {
+    public void stopAction(String name) {
         if (timers.containsKey(name)) {
-            timers.get(name).cancel();
+            timers.remove(name).cancel();
         }
     }
 }

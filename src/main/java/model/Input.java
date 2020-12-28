@@ -21,12 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui;
+package model;
 
-import model.Movable;
+import java.util.Optional;
 
-import java.util.Set;
+public class Input {
+    private final Direction directionPressed;
+    private final Direction directionReleased;
 
-public interface DisplayListener {
-    void redraw(Set<Movable> movables);
+    public static Input forDirectionPressed(Direction direction) {
+        return new Input(direction, null);
+    }
+
+    public static Input forDirectionReleased(Direction direction) {
+        return new Input(null, direction);
+    }
+
+    private Input(Direction directionPressed, Direction directionReleased) {
+        this.directionPressed = directionPressed;
+        this.directionReleased = directionReleased;
+    }
+
+    public Optional<Direction> directionPressed() {
+        return Optional.ofNullable(directionPressed);
+    }
+
+    public Optional<Direction> directionReleased() {
+        return Optional.ofNullable(directionReleased);
+    }
 }

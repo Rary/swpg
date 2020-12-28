@@ -21,8 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package game;
+package event;
 
-public interface Event {
-    void act();
+import model.Input;
+
+public class InputEvent extends Event<Input> {
+    public InputEvent(Input payload) {
+        super(payload);
+    }
 }

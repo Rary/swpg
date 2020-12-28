@@ -23,23 +23,31 @@
  */
 package event;
 
-import state.State;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventManager {
-    private final List<EventListener> eventListeners;
+    private final List<EventListener<InputEvent>> inputEventListeners;
+    private final List<EventListener<StateEvent>> stateEventListeners;
 
     public EventManager() {
-        this.eventListeners = new ArrayList<>();
+        this.inputEventListeners = new ArrayList<>();
+        this.stateEventListeners = new ArrayList<>();
     }
 
-    public void subscribe(Event event, EventListener eventListener) {
-        eventListeners.add(eventListener);
+    public void subscribeToInput(EventListener<InputEvent> inputEventListener) {
+        inputEventListeners.add(inputEventListener);
     }
 
-    public void publish(Event event, State state) {
-        eventListeners.forEach(listener -> listener.eventCompleted(event, state));
+    public void subscribeToState(EventListener<StateEvent> stateEventListener) {
+        stateEventListeners.add(stateEventListener);
+    }
+
+    public void publish(InputEvent event) {
+        inputEventListeners.forEach(listener -> listener.eventCompleted(event));
+    }
+
+    public void publish(StateEvent event) {
+        stateEventListeners.forEach(listener -> listener.eventCompleted(event));
     }
 }

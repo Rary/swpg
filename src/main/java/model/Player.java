@@ -23,76 +23,8 @@
  */
 package model;
 
-public class Player implements Movable {
-    private int x;
-    private int y;
-    private int heading;
-    private int velocity;
-
+public class Player extends Movable {
     public Player(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.heading = 0;
-        this.velocity = 0;
-    }
-
-    @Override
-    public String getName() {
-        return PLAYER;
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public int getPhase() {
-        return 0;
-    }
-
-    public int getHeading() {
-        return heading;
-    }
-
-    public int getVelocity() {
-        return velocity;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void changeX(int deltaX) {
-        this.x += deltaX;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void changeY(int deltaY) {
-        this.y += deltaY;
-    }
-
-    public void setHeading(int heading) {
-        this.heading = heading;
-    }
-
-    public void changeHeading(int deltaHeading) {
-        this.heading += deltaHeading;
-    }
-
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
-    }
-
-    public void changeVelocity(int deltaVelocity) {
-        this.velocity += deltaVelocity;
+        super("player", x, y);
     }
 }
