@@ -23,25 +23,13 @@
  */
 package ui;
 
-import event.EventListener;
-import event.StateEvent;
-import ui.graphics.SpriteManager;
 import ui.util.FrameHelper;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class GameWindow extends JFrame {
-    private final GamePanel gamePanel;
-
     public GameWindow(String title) {
         super(title);
-        this.gamePanel = new GamePanel(new GameRenderer(new SpriteManager(), 980.0, 508.0));
-        this.add(gamePanel, BorderLayout.CENTER);
-    }
-
-    public EventListener<StateEvent> eventListener() {
-        return gamePanel;
     }
 
     public void launch() {

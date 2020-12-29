@@ -36,6 +36,7 @@ import java.util.Set;
 public class Keyboard implements KeyListener {
     private final EventManager eventManager;
     private final Set<Integer> keyPresses;
+    private Direction directionHeld;
 
     public Keyboard(EventManager eventManager) {
         this.eventManager = eventManager;
@@ -55,11 +56,77 @@ public class Keyboard implements KeyListener {
         }
         keyPresses.add(keyCode);
         switch (keyCode) {
+            case KeyEvent.VK_UP:
+                if (directionHeld == Direction.W) {
+                    release();
+                    press(Direction.NW);
+                }
+                else if (directionHeld == Direction.E) {
+                    release();
+                    press(Direction.NE);
+                }
+                else {
+                    release();
+                    press(Direction.N);
+                }
+                break;
+            case KeyEvent.VK_PAGE_UP:
+                release();
+                press(Direction.NE);
+                break;
             case KeyEvent.VK_RIGHT:
-                eventManager.publish(new InputEvent(Input.forDirectionPressed(Direction.E)));
+                if (directionHeld == Direction.N) {
+                    release();
+                    press(Direction.NE);
+                }
+                else if (directionHeld == Direction.S) {
+                    release();
+                    press(Direction.SE);
+                }
+                else {
+                    release();
+                    press(Direction.E);
+                }
+                break;
+            case KeyEvent.VK_PAGE_DOWN:
+                release();
+                press(Direction.SE);
+                break;
+            case KeyEvent.VK_DOWN:
+                if (directionHeld == Direction.W) {
+                    release();
+                    press(Direction.SW);
+                }
+                else if (directionHeld == Direction.E) {
+                    release();
+                    press(Direction.SE);
+                }
+                else {
+                    release();
+                    press(Direction.S);
+                }
+                break;
+            case KeyEvent.VK_END:
+                release();
+                press(Direction.SW);
                 break;
             case KeyEvent.VK_LEFT:
-                eventManager.publish(new InputEvent(Input.forDirectionPressed(Direction.W)));
+                if (directionHeld == Direction.N) {
+                    release();
+                    press(Direction.NW);
+                }
+                else if (directionHeld == Direction.S) {
+                    release();
+                    press(Direction.SW);
+                }
+                else {
+                    release();
+                    press(Direction.W);
+                }
+                break;
+            case KeyEvent.VK_HOME:
+                release();
+                press(Direction.NW);
                 break;
             default:
                 break;
@@ -74,14 +141,88 @@ public class Keyboard implements KeyListener {
         }
         keyPresses.remove(keyCode);
         switch (keyCode) {
+            case KeyEvent.VK_UP:
+                if (directionHeld == Direction.NW) {
+                    release();
+                    press(Direction.W);
+                }
+                else if (directionHeld == Direction.NE) {
+                    release();
+                    press(Direction.E);
+                }
+                else {
+                    release();
+                }
+                break;
+            case KeyEvent.VK_PAGE_UP:
+                release();
+                break;
             case KeyEvent.VK_RIGHT:
-                eventManager.publish(new InputEvent(Input.forDirectionReleased(Direction.E)));
+                if (directionHeld == Direction.NE) {
+                    release();
+                    press(Direction.N);
+                }
+                else if (directionHeld == Direction.SE) {
+                    release();
+                    press(Direction.S);
+                }
+                else {
+                    release();
+                }
+                break;
+            case KeyEvent.VK_PAGE_DOWN:
+                release();
+                break;
+            case KeyEvent.VK_DOWN:
+                if (directionHeld == Direction.SW) {
+                    release();
+                    press(Direction.W);
+                }
+                else if (directionHeld == Direction.SE) {
+                    release();
+                    press(Direction.E);
+                }
+                else {
+                    release();
+                }
+                break;
+            case KeyEvent.VK_END:
+                release();
                 break;
             case KeyEvent.VK_LEFT:
-                eventManager.publish(new InputEvent(Input.forDirectionReleased(Direction.W)));
+                if (directionHeld == Direction.NW) {
+                    release();
+                    press(Direction.N);
+                }
+                else if (directionHeld == Direction.SW) {
+                    release();
+                    press(Direction.S);
+                }
+                else {
+                    release();
+                }
+                break;
+            case KeyEvent.VK_HOME:
+                release();
                 break;
             default:
                 break;
         }
+    }
+
+    private void press(Direction direction) {
+        if (direction == null) {
+            return;
+        }
+        eventManager.publish(new InputEvent(Input.forDirectionPressed(direction)));
+        directionHeld = direction;
+    }
+
+    private void release() {
+        if (directionHeld == null) {
+            return;
+        }
+        eventManager.publish(new InputEvent(Input.forDirectionReleased(directionHeld)));
+        directionHeld = null;
     }
 }

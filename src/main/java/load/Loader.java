@@ -30,20 +30,70 @@ import game.Clock;
 import model.Player;
 import game.World;
 import model.State;
+import ui.GamePanel;
+import ui.GameRenderer;
 import ui.GameWindow;
 import ui.Keyboard;
+import ui.graphics.SpriteManager;
+
+import java.awt.*;
 
 public class Loader {
     public void run(ArgumentParser args) {
-        Messages messages = new Messages(args.stringArgument("messages", "m").orElse("i18n/messages"));
-        EventManager eventManager = new EventManager();
-        GameConfig gameConfig = new GameConfig(messages);
-        World world = new World(eventManager, gameConfig, new State(new Player(100, 100)), new Clock());
-        GameWindow window = new GameWindow(gameConfig.windowTitle());
-        window.addKeyListener(new Keyboard(eventManager));
+        Messages messages = buildMessages(args);
+        EventManager eventManager = buildEventManager();
+        GameConfig gameConfig = buildGameConfig(messages);
+        World world = buildWorld(eventManager, gameConfig);
+        SpriteManager spriteManager = buildSpriteManager();
+        GamePanel gamePanel = buildGamePanel(spriteManager);
+        GameWindow gameWindow = buildGameWindow(gameConfig);
+        Keyboard keyboard = buildKeyboard(eventManager);
+        initializeComponents(gameWindow, gamePanel, keyboard, world, eventManager);
+        startGame(spriteManager, gameWindow, world);
+    }
+
+    private Messages buildMessages(ArgumentParser args) {
+        return new Messages(args.stringArgument("messages", "m").orElse("i18n/messages"));
+    }
+
+    private EventManager buildEventManager() {
+        return new EventManager();
+    }
+
+    private GameConfig buildGameConfig(Messages messages) {
+        return new GameConfig(messages);
+    }
+
+    private World buildWorld(EventManager eventManager, GameConfig gameConfig) {
+        return new World(eventManager, gameConfig, new State(new Player(100, 100)), new Clock());
+    }
+
+    private SpriteManager buildSpriteManager() {
+        return new SpriteManager();
+    }
+
+    private GamePanel buildGamePanel(SpriteManager spriteManager) {
+        return new GamePanel(new GameRenderer(spriteManager, 980.0, 508.0));
+    }
+
+    private GameWindow buildGameWindow(GameConfig gameConfig) {
+        return new GameWindow(gameConfig.windowTitle());
+    }
+
+    private Keyboard buildKeyboard(EventManager eventManager) {
+        return new Keyboard(eventManager);
+    }
+
+    private void initializeComponents(GameWindow gameWindow, GamePanel gamePanel, Keyboard keyboard, World world, EventManager eventManager) {
+        gameWindow.add(gamePanel, BorderLayout.CENTER);
+        gameWindow.addKeyListener(keyboard);
         eventManager.subscribeToInput(world);
-        eventManager.subscribeToState(window.eventListener());
-        window.launch();
+        eventManager.subscribeToState(gamePanel);
+    }
+
+    private void startGame(SpriteManager spriteManager, GameWindow gameWindow, World world) {
+        spriteManager.load();
+        gameWindow.launch();
         world.start();
     }
 }
