@@ -25,8 +25,8 @@ package game;
 
 public interface Action {
     String COUNTER = "counter";
-    String RIGHT_HELD = "rightHeld";
-    String LEFT_HELD = "leftHeld";
+    String ACCELERATE = "accelerate";
+    String DECELERATE = "decelerate";
     String MOVE_PLAYER = "movePlayer";
 
     void act();

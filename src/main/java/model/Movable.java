@@ -27,14 +27,14 @@ public class Movable {
     private final String name;
     private int x;
     private int y;
-    private int heading;
+    private Direction direction;
     private int velocity;
 
     public Movable(String name) {
         this.name = name;
         this.x = -1;
         this.y = -1;
-        this.heading = 0;
+        this.direction = Direction.NONE;
         this.velocity = 0;
     }
 
@@ -42,7 +42,7 @@ public class Movable {
         this.name = name;
         this.x = x;
         this.y = y;
-        this.heading = 0;
+        this.direction = Direction.NONE;
         this.velocity = 0;
     }
 
@@ -62,8 +62,8 @@ public class Movable {
         return 0;
     }
 
-    public int getHeading() {
-        return heading;
+    public Direction getDirection() {
+        return direction;
     }
 
     public int getVelocity() {
@@ -86,12 +86,8 @@ public class Movable {
         this.y += deltaY;
     }
 
-    public void setHeading(int heading) {
-        this.heading = heading;
-    }
-
-    public void changeHeading(int deltaHeading) {
-        this.heading += deltaHeading;
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public void setVelocity(int velocity) {

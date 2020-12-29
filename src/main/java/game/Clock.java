@@ -29,6 +29,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Clock {
+    public final int ONE_SECOND = 1000;
+
     private final Map<String, Timer> timers;
 
     public Clock() {

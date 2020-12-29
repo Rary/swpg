@@ -24,23 +24,29 @@
 package model;
 
 public enum Direction {
-    NONE(-1),
-    N(0),
-    NE(45),
-    E(90),
-    SE(135),
-    S(180),
-    SW(225),
-    W(270),
-    NW(315);
+    NONE(0, 0),
+    N(0, -1),
+    NE(1, -1),
+    E(1, 0),
+    SE(1, 1),
+    S(0, 1),
+    SW(-1, 1),
+    W(-1, 0),
+    NW(-1, -1);
 
-    private final int heading;
+    private final int deltaX;
+    private final int deltaY;
 
-    Direction(int heading) {
-        this.heading = heading;
+    Direction(int deltaX, int deltaY) {
+        this.deltaX = deltaX;
+        this.deltaY = deltaY;
     }
 
-    public int heading() {
-        return heading;
+    public int deltaX() {
+        return deltaX;
+    }
+
+    public int deltaY() {
+        return deltaY;
     }
 }
