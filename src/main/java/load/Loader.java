@@ -65,7 +65,7 @@ public class Loader {
     }
 
     private World buildWorld(EventManager eventManager, GameConfig gameConfig) {
-        return new World(eventManager, gameConfig, new State(new Player(100, 100)), new Clock());
+        return new World(eventManager, gameConfig, new State(new Player(2, 800, 800)), new Clock());
     }
 
     private SpriteManager buildSpriteManager() {
@@ -73,7 +73,7 @@ public class Loader {
     }
 
     private GamePanel buildGamePanel(SpriteManager spriteManager) {
-        return new GamePanel(new GameRenderer(spriteManager, 980.0, 508.0));
+        return new GamePanel(new GameRenderer(spriteManager, 1900.0, 1000.0));
     }
 
     private GameWindow buildGameWindow(GameConfig gameConfig) {
@@ -92,7 +92,7 @@ public class Loader {
     }
 
     private void startGame(SpriteManager spriteManager, GameWindow gameWindow, World world) {
-        spriteManager.load();
+        spriteManager.load("sprites");
         gameWindow.launch();
         world.start();
     }

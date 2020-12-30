@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements EventListener<StateEvent> {
     @Override
     public void eventCompleted(StateEvent event) {
         Player player = event.payload().player();
-        gameRenderer.placeSprite(player.getName(), player.getX(), player.getY(), player.getPhase());
+        gameRenderer.placeSprite(player.getName(), player.getX(), player.getY(), player.getDirection().toString().toLowerCase(), player.getPhase());
         this.getParent().repaint();
     }
 }

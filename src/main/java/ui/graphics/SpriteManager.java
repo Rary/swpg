@@ -23,6 +23,9 @@
  */
 package ui.graphics;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -33,13 +36,31 @@ public class SpriteManager {
         this.sprites = new HashMap<>();
     }
 
-    public void load() {
-        try {
-            Sprite sprite = new Sprite("player", Collections.singletonList(this.getClass().getClassLoader().getResourceAsStream("sprites/player-r1.png")));
-            sprites.put(sprite.getName(), sprite);
+    public void load(String directory) {
+        File spritesDirectory = new File(String.format("%s/%s", this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), directory));
+        if (! spritesDirectory.isDirectory()) {
+            throw new RuntimeException("Missing sprites directory");
         }
-        catch (IOException e) {
-            throw new RuntimeException();
+        Sprite sprite = null;
+        for (File spriteFile : Objects.requireNonNull(spritesDirectory.listFiles())) {
+            String filename = spriteFile.getName();
+            String[] tokens = filename.split("-");
+            if (tokens.length < 2) {
+                throw new RuntimeException(String.format("Unrecognizable sprite filename format: %s", filename));
+            }
+            String name = tokens[0].toLowerCase();
+            String direction = tokens[1].toLowerCase();
+            if (sprite == null || ! sprite.getName().equals(name)) {
+                sprite = new Sprite(name);
+                sprites.put(name, sprite);
+            }
+            try {
+                BufferedImage image = ImageIO.read(spriteFile);
+                sprite.addImage(direction, image);
+            }
+            catch (IOException e) {
+                throw new RuntimeException();
+            }
         }
     }
 
@@ -47,10 +68,11 @@ public class SpriteManager {
         return sprites.values();
     }
 
-    public void placeSprite(String name, int x, int y, int phase) {
+    public void placeSprite(String name, int x, int y, String direction, int phase) {
         Sprite sprite = findSprite(name);
         sprite.setX(x);
         sprite.setY(y);
+        sprite.setDirection(direction);
         sprite.setPhase(phase);
     }
 

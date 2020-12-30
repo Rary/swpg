@@ -40,8 +40,8 @@ public class GameRenderer {
         this.preferredHeight = preferredHeight;
     }
 
-    public void placeSprite(String name, int x, int y, int phase) {
-        spriteManager.placeSprite(name, x, y, phase);
+    public void placeSprite(String name, int x, int y, String direction, int phase) {
+        spriteManager.placeSprite(name, x, y, direction, phase);
     }
 
     public void render(Graphics graphics, int windowWidth, int windowHeight) {

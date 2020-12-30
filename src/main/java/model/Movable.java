@@ -25,24 +25,28 @@ package model;
 
 public class Movable {
     private final String name;
+    private final int phases;
     private int x;
     private int y;
     private Direction direction;
+    private int phase;
     private int velocity;
 
     public Movable(String name) {
-        this.name = name;
-        this.x = -1;
-        this.y = -1;
-        this.direction = Direction.NONE;
-        this.velocity = 0;
+        this(name, 1);
     }
 
-    public Movable(String name, int x, int y) {
+    public Movable(String name, int phases) {
+        this(name, phases, -1, -1);
+    }
+
+    public Movable(String name, int phases, int x, int y) {
         this.name = name;
+        this.phases = phases;
         this.x = x;
         this.y = y;
         this.direction = Direction.NONE;
+        this.phase = 0;
         this.velocity = 0;
     }
 
@@ -59,7 +63,7 @@ public class Movable {
     }
 
     public int getPhase() {
-        return 0;
+        return phase;
     }
 
     public Direction getDirection() {
@@ -88,6 +92,10 @@ public class Movable {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void setPhase(int phase) {
+        this.phase = phase;
     }
 
     public void setVelocity(int velocity) {

@@ -23,28 +23,33 @@
  */
 package ui.graphics;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Sprite {
     private final String name;
-    private final List<BufferedImage> images;
+    private final Map<String, List<BufferedImage>> images;
 
     private int x;
     private int y;
+    private String direction;
     private int phase;
 
-    public Sprite(String name, List<InputStream> imageStreams) throws IOException {
+    public Sprite(String name) {
         this.name = name;
-        this.images = new ArrayList<>();
-        for (InputStream input : imageStreams) {
-            BufferedImage read = ImageIO.read(input);
-            this.images.add(read);
-        }
+        this.images = new HashMap<>();
+        this.images.put("none", new ArrayList<>());
+        this.images.put("n", new ArrayList<>());
+        this.images.put("ne", new ArrayList<>());
+        this.images.put("e", new ArrayList<>());
+        this.images.put("se", new ArrayList<>());
+        this.images.put("s", new ArrayList<>());
+        this.images.put("sw", new ArrayList<>());
+        this.images.put("w", new ArrayList<>());
+        this.images.put("nw", new ArrayList<>());
     }
 
     public String getName() {
@@ -52,7 +57,7 @@ public class Sprite {
     }
 
     public BufferedImage image() {
-        return this.images.get(phase);
+        return this.images.get(direction).get(phase);
     }
 
     public int getX() {
@@ -63,8 +68,16 @@ public class Sprite {
         return y;
     }
 
+    public String getDirection() {
+        return direction;
+    }
+
     public int getPhase() {
         return phase;
+    }
+
+    public void addImage(String direction, BufferedImage image) {
+        this.images.get(direction).add(image);
     }
 
     public void setX(int x) {
@@ -73,6 +86,10 @@ public class Sprite {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
     public void setPhase(int phase) {

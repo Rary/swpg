@@ -27,9 +27,9 @@ import config.i18n.Messages;
 
 public class GameConfig {
     public final int FRAME_DURATION = 25;
-    public final int PLAYER_ACCELERATION = 20;
+    public final int PLAYER_ACCELERATION = 50;
     public final int PLAYER_ACCELERATION_RATE = 200;
-    public final int PLAYER_DECELERATION = -20;
+    public final int PLAYER_DECELERATION = -100;
     public final int PLAYER_DECELERATION_RATE = 200;
     public final int PLAYER_MAX_VELOCITY = 200;
 

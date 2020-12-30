@@ -24,7 +24,7 @@
 package model;
 
 public class Player extends Movable {
-    public Player(int x, int y) {
-        super("player", x, y);
+    public Player(int phases, int x, int y) {
+        super("player", phases, x, y);
     }
 }
