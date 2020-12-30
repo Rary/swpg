@@ -21,13 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package game;
+package game.action;
 
-public interface Action {
-    String COUNTER = "counter";
-    String ACCELERATE = "accelerate";
-    String DECELERATE = "decelerate";
-    String MOVE_PLAYER = "movePlayer";
+import game.Clock;
+import model.Movable;
+import model.State;
 
-    void act();
+public class Accelerate implements Action {
+    private final Clock clock;
+    private final State state;
+    private final int acceleration;
+    private final int maxVelocity;
+    private final Movable movable;
+    private final Action moveAction;
+
+    public Accelerate(Clock clock, State state, int acceleration, int maxVelocity, Movable movable, Action moveAction) {
+        this.clock = clock;
+        this.state = state;
+        this.acceleration = acceleration;
+        this.maxVelocity = maxVelocity;
+        this.movable = movable;
+        this.moveAction = moveAction;
+    }
+
+    @Override
+    public void act() {
+        clock.stopAction(Action.DECELERATE);
+        if (movable.getVelocity() < maxVelocity) {
+            movable.changeVelocity(acceleration);
+            moveAction.act();
+            if (movable.getVelocity() >= maxVelocity) {
+                clock.stopAction(Action.ACCELERATE);
+            }
+        }
+    }
 }

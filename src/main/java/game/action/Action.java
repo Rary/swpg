@@ -21,41 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package game;
+package game.action;
 
-import game.action.Action;
+public interface Action {
+    String COUNTER = "counter";
+    String ACCELERATE = "accelerate";
+    String DECELERATE = "decelerate";
+    String MOVE_PLAYER = "movePlayer";
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class Clock {
-    public final int ONE_SECOND = 1000;
-
-    private final Map<String, Timer> timers;
-
-    public Clock() {
-        this.timers = new HashMap<>();
-    }
-
-    public void scheduleAction(String name, Action action, int delay) {
-        if (timers.containsKey(name)) {
-            timers.remove(name).cancel();
-        }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                action.act();
-            }
-        }, delay, delay);
-        timers.put(name, timer);
-    }
-
-    public void stopAction(String name) {
-        if (timers.containsKey(name)) {
-            timers.remove(name).cancel();
-        }
-    }
+    void act();
 }

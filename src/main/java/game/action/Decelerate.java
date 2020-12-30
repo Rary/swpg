@@ -21,41 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package game;
+package game.action;
 
-import game.action.Action;
+import game.Clock;
+import model.Movable;
+import model.State;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+public class Decelerate implements Action {
+    private final Clock clock;
+    private final State state;
+    private final int deceleration;
+    private final Movable movable;
 
-public class Clock {
-    public final int ONE_SECOND = 1000;
-
-    private final Map<String, Timer> timers;
-
-    public Clock() {
-        this.timers = new HashMap<>();
+    public Decelerate(Clock clock, State state, int deceleration, Movable movable) {
+        this.clock = clock;
+        this.state = state;
+        this.deceleration = deceleration;
+        this.movable = movable;
     }
 
-    public void scheduleAction(String name, Action action, int delay) {
-        if (timers.containsKey(name)) {
-            timers.remove(name).cancel();
-        }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                action.act();
+    @Override
+    public void act() {
+        clock.stopAction(Action.ACCELERATE);
+        if (movable.getVelocity() > 0) {
+            movable.changeVelocity(deceleration);
+            new Move(clock, state, movable).act();
+            if (movable.getVelocity() <= 0) {
+                clock.stopAction(Action.DECELERATE);
             }
-        }, delay, delay);
-        timers.put(name, timer);
-    }
-
-    public void stopAction(String name) {
-        if (timers.containsKey(name)) {
-            timers.remove(name).cancel();
         }
     }
 }

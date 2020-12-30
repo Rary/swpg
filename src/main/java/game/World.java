@@ -28,7 +28,10 @@ import event.EventListener;
 import event.EventManager;
 import event.InputEvent;
 import event.StateEvent;
-import model.Player;
+import game.action.Accelerate;
+import game.action.Action;
+import game.action.Decelerate;
+import game.action.Move;
 import model.Direction;
 import model.Input;
 import model.State;
@@ -64,55 +67,19 @@ public class World implements EventListener<InputEvent> {
 
     private void directionPressed(Direction direction) {
         state.inputDirection(direction);
-        accelerate();
+        Action move = new Move(clock, state, state.player());
+        Action accelerate = new Accelerate(clock, state, gameConfig.PLAYER_ACCELERATION, gameConfig.PLAYER_MAX_VELOCITY, state.player(), move);
+        accelerate.act();
         eventManager.publish(new StateEvent(state));
-        clock.scheduleAction(Action.ACCELERATE, this::accelerate, gameConfig.PLAYER_ACCELERATION_RATE);
-        movePlayer();
+        clock.scheduleAction(Action.ACCELERATE, accelerate, gameConfig.PLAYER_ACCELERATION_RATE);
+        move.act();
     }
 
     private void directionReleased() {
-        decelerate();
+        Action decelerate = new Decelerate(clock, state, gameConfig.PLAYER_DECELERATION, state.player());
+        decelerate.act();
         eventManager.publish(new StateEvent(state));
-        clock.scheduleAction(Action.DECELERATE, this::decelerate, gameConfig.PLAYER_DECELERATION_RATE);
-        movePlayer();
-    }
-
-    private void accelerate() {
-        clock.stopAction(Action.DECELERATE);
-        if (state.player().getVelocity() < gameConfig.PLAYER_MAX_VELOCITY) {
-            state.player().changeVelocity(gameConfig.PLAYER_ACCELERATION);
-            movePlayer();
-            if (state.player().getVelocity() >= gameConfig.PLAYER_MAX_VELOCITY) {
-                clock.stopAction(Action.ACCELERATE);
-            }
-        }
-    }
-
-    private void decelerate() {
-        clock.stopAction(Action.ACCELERATE);
-        if (state.player().getVelocity() > 0) {
-            state.player().changeVelocity(gameConfig.PLAYER_DECELERATION);
-            movePlayer();
-            if (state.player().getVelocity() <= 0) {
-                clock.stopAction(Action.DECELERATE);
-            }
-        }
-    }
-
-    private void movePlayer() {
-        Player player = state.player();
-        if (player.getVelocity() == 0) {
-            state.inputDirection(Direction.NONE);
-            clock.stopAction(Action.MOVE_PLAYER);
-            return;
-        }
-        Direction direction = state.inputDirection();
-        player.setDirection(direction);
-        clock.scheduleAction(Action.MOVE_PLAYER, () -> {
-            int deltaX = state.player().getDirection().deltaX();
-            int deltaY = state.player().getDirection().deltaY();
-            state.player().changeX(deltaX);
-            state.player().changeY(deltaY);
-        }, clock.ONE_SECOND / state.player().getVelocity());
+        clock.scheduleAction(Action.DECELERATE, decelerate, gameConfig.PLAYER_DECELERATION_RATE);
+        new Move(clock, state, state.player()).act();
     }
 }

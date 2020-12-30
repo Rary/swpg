@@ -21,41 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package game;
+package game.action;
 
-import game.action.Action;
+import game.Clock;
+import model.Direction;
+import model.Movable;
+import model.State;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+public class Move implements Action {
+    private final Clock clock;
+    private final State state;
+    private final Movable movable;
 
-public class Clock {
-    public final int ONE_SECOND = 1000;
-
-    private final Map<String, Timer> timers;
-
-    public Clock() {
-        this.timers = new HashMap<>();
+    public Move(Clock clock, State state, Movable movable) {
+        this.clock = clock;
+        this.state = state;
+        this.movable = movable;
     }
 
-    public void scheduleAction(String name, Action action, int delay) {
-        if (timers.containsKey(name)) {
-            timers.remove(name).cancel();
+    @Override
+    public void act() {
+        if (movable.getVelocity() == 0) {
+            state.inputDirection(Direction.NONE);
+            clock.stopAction(Action.MOVE_PLAYER);
+            return;
         }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                action.act();
-            }
-        }, delay, delay);
-        timers.put(name, timer);
-    }
-
-    public void stopAction(String name) {
-        if (timers.containsKey(name)) {
-            timers.remove(name).cancel();
-        }
+        Direction direction = state.inputDirection();
+        movable.setDirection(direction);
+        clock.scheduleAction(Action.MOVE_PLAYER, () -> {
+            int deltaX = movable.getDirection().deltaX();
+            int deltaY = movable.getDirection().deltaY();
+            movable.changeX(deltaX);
+            movable.changeY(deltaY);
+        }, clock.ONE_SECOND / movable.getVelocity());
     }
 }
