@@ -48,7 +48,7 @@ public class Accelerate implements Action {
     public void act() {
         clock.stopAction(Action.DECELERATE);
         if (movable.getVelocity() < maxVelocity) {
-            movable.changeVelocity(acceleration);
+            movable.changeVelocityWithinMaximum(acceleration, maxVelocity);
             moveAction.act();
             if (movable.getVelocity() >= maxVelocity) {
                 clock.stopAction(Action.ACCELERATE);

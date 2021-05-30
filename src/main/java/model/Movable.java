@@ -105,4 +105,14 @@ public class Movable {
     public void changeVelocity(int deltaVelocity) {
         this.velocity += deltaVelocity;
     }
+
+    public void changeVelocityWithinMinimum(int deltaVelocity, int minimum) {
+        int newVelocity = this.velocity + deltaVelocity;
+        this.velocity = Math.max(newVelocity, minimum);
+    }
+
+    public void changeVelocityWithinMaximum(int deltaVelocity, int maximum) {
+        int newVelocity = this.velocity + deltaVelocity;
+        this.velocity = Math.min(newVelocity, maximum);
+    }
 }

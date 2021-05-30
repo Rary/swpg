@@ -53,6 +53,6 @@ public class Move implements Action {
             int deltaY = movable.getDirection().deltaY();
             movable.changeX(deltaX);
             movable.changeY(deltaY);
-        }, clock.ONE_SECOND / movable.getVelocity());
+        }, clock.ONE_SECOND / Math.min(movable.getVelocity(), clock.ONE_SECOND));
     }
 }

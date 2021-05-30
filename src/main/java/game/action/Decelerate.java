@@ -44,7 +44,7 @@ public class Decelerate implements Action {
     public void act() {
         clock.stopAction(Action.ACCELERATE);
         if (movable.getVelocity() > 0) {
-            movable.changeVelocity(deceleration);
+            movable.changeVelocityWithinMinimum(deceleration, 0);
             new Move(clock, state, movable).act();
             if (movable.getVelocity() <= 0) {
                 clock.stopAction(Action.DECELERATE);
